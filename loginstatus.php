@@ -8,6 +8,6 @@
     if (!isset($_SESSION['username'])) {
         exit;
     }
-    $g = $_SESSION['username'];
+    $name = $_SESSION['username'];
     
     ?>
