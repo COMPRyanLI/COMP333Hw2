@@ -17,7 +17,8 @@
         if (!isset($_SESSION['username'])) {
             exit;
         }
-        $g = $_SESSION['username'];
+        $user = $_SESSION['username'];
+        echo "Logged in: " . $user
         
     ?>
     <nav>
@@ -32,7 +33,7 @@
 
     <h1>Success</h1>
     <hr color="#a01d88"/>
-    <p class = "middle">Your Account has Been Made <?php echo $g ?> !</p>
+    <p class = "middle">Your Account has Been Made <?php echo $user ?> !</p>
     <p class ="middle" ><a href="index.html">Back Home</a> </p>
       
     </a>.

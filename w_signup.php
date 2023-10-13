@@ -28,8 +28,7 @@
 </head>
 
 <body>
-  <?php
-
+  <?php session_start();
     // PHP code for retrieving data from the database. If you have multiple files
     // relying on the this server config, you can create a config.php file and
     // import it with `require_once "config.php";` at the beginning of each file 
@@ -64,8 +63,10 @@
 
       // The following is the core part of this script where we connect PHP
       // and SQL.
+
       // Check that the user entered data in the form.
-      
+      // code --> if(!isset($_REQUEST['username']) && !isset($_REQUEST['password'])){
+
       // If so, prepare SQL query with the data to query the database.
       $sql_query = "SELECT * FROM users WHERE username = ('$name')";
 
@@ -80,9 +81,10 @@
       if($num>0){ 
         echo "Username is taken. Try another";  
       }else {
-         
+        
         $hash = password_hash($pass,  PASSWORD_DEFAULT); 
         $out_value = "Success!";
+        
       
         // sql query for the username and password
         $p_query = "INSERT INTO users (username, password) VALUES (?, ?)";
@@ -90,18 +92,18 @@
 
         // bind the parameters of the sql statemtn to avoid SQL injection
         $stmt = mysqli_prepare($conn, $p_query);
-        mysqli_stmt_bind_param($stmt, "ss", $name, $pass);
-        if(mysqli_stmt_execute($stmt)){
-          
+        mysqli_stmt_bind_param($stmt, "ss", $name, $hash);
+
+        if(mysqli_stmt_execute($stmt)){     
           // code for starting a user log in session. The user will stay logged in 
           // as long as the global username variable in session is equal to their own. 
-          session_start(); 
-          header("Location: index.html");
           $_SESSION['username'] = $name;
+          header("Location: signup.php");
         };
         
       }
-    }
+      // end bracket for the if statement above }
+    }  
     // Close SQL connection.
     $conn->close();
   ?>
@@ -114,6 +116,11 @@
             <li><a href="index.html">FAQs</a></li>
         </ul>
   </nav>
+
+  <h1>Sign Up</h1>
+    <hr color="#a01d88"/>
+    <p class = "middle">Please create your username and password down below</p>
+    
   <!-- 
     HTML code for the form by which the user can query data.
     Note that we are using names (to pass values around in PHP) and not ids
@@ -121,7 +128,7 @@
     You can leave the action in the form open 
     (https://stackoverflow.com/questions/1131781/is-it-a-good-practice-to-use-an-empty-url-for-a-html-forms-action-attribute-a)
   -->
-  <form method="GET" action="">
+  <form method="GET" action="signup.php">
   Username: <input type="text" name="username" placeholder="username" /><br>
   Password: <input type="password" name="password" placeholder="password" /><br>
   <input type="submit" name="submit" value="Submit"/>
@@ -135,6 +142,7 @@
     if(!empty($out_value)){
       echo $out_value;
     }
+        
 
   ?></p>
   </form>
