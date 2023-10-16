@@ -1,0 +1,33 @@
+/* styles.css */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap");
+
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    border-style:solid;
+    border-color: blue;
+    padding: 0;
+}
+
+h1{
+    text-align: center;
+}
+
+h3{
+    text-align:center;
+}
+
+p{
+    font:italic normal 16px Times New Roman;
+    text-align: center;
+}
+
+
+/* Heading Section */
+.heading {
+    text-align: center;
+
+}
+
