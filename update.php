@@ -45,7 +45,7 @@
     } else {
         $sql = "UPDATE ratings SET artist = ?, song = ?, rating = ?" ;
         $stmt1 = mysqli_prepare($conn, $sql);   
-        mysqli_stmt_bind_param($stmt1, "sss", $artist, $song, $rating);
+        mysqli_stmt_bind_param($stmt1, "ssi", $artist, $song, $rating);
         mysqli_stmt_execute($stmt1);
         header("Location: index.php");
     }
@@ -63,7 +63,7 @@
   New Rating: <input type="text" name="Rating" placeholder="" /><br>
   <input type="submit" name="submit" value="submit"/>
 
-
   </form>
+  <br /><a href="index.php">Cancel</a>
 </body>
 </html>

@@ -98,9 +98,8 @@
   <form method="GET" action="">
   Song: <input type="text" name="song" placeholder="song" /><br>
   <input type="submit" name="submit" value="Submit"/>
-
-  
-
   </form>
+  
+  <br /><a href="index.php">Cancel</a>
 </body>
 </html>
