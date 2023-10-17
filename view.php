@@ -10,8 +10,14 @@
 
 <body>
     <?php
+    if (isset($_GET["id"])){
+        $id_chosen = $_GET["id"];
+    }
+    else{
+        echo "view error";
+    }
     session_start();
-    include 'index.php';
+
     echo('You are logged in as user:'. $_SESSION['name']. '<br />'); //search for user in the rating table
     echo '<br /><a href="login.php">Log out</a>';
    ?>
@@ -19,10 +25,8 @@
    <br />
    <h4>username</h4>
    <?php
-   echo $user_chosen. '<br />';// the username chosen to view in index page
-   ?>
-   <h4>artist</h4>
-   <?php
+
+
    $servername = "localhost";
    $username = "root";
    $password = "";
@@ -35,9 +39,9 @@
     echo "Failed to connect to MySQL: "
      . mysqli_connect_error();
    }
-   $sql = "SELECT * FROM ratings WHERE username = ?";
+   $sql = "SELECT * FROM ratings WHERE id = ?";
    $stmt = mysqli_prepare($db, $sql);
-   mysqli_stmt_bind_param($stmt, "s", $user_chosen);
+   mysqli_stmt_bind_param($stmt, "i", $id_chosen);
    mysqli_stmt_execute($stmt);
    $result = mysqli_stmt_get_result($stmt);
 
@@ -47,10 +51,15 @@
    $rating = [];
    if ($num > 0){
     while($rows = mysqli_fetch_array($result)){
+        $user_chosen[] = $rows['username'];
         $artist[] = $rows['artist'];
         $song[] = $rows['song'];
         $rating[] = $rows['rating'];
     }
+    foreach ($user_chosen as $uc) {
+        echo $uc;
+       }
+     echo '<h4>artist</h4>' ;
     foreach ($artist as $ar) {
         echo $ar;
        }
