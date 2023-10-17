@@ -39,10 +39,13 @@
     $song = $_REQUEST['Song'];
     $rating = $_REQUEST['Rating'];
 
-    
+    // checks if user entered proper data. if so, insert that data into the db
     if (isset($song) | isset($artist) | isset($rating)){
         echo "Please fill out all fields";
-    } else {
+    } else if (!is_int($rating)){
+        echo "Please enter a number in for the ratings";
+    }
+    else {
         $sql = "UPDATE ratings SET artist = ?, song = ?, rating = ?" ;
         $stmt1 = mysqli_prepare($conn, $sql);   
         mysqli_stmt_bind_param($stmt1, "ssi", $artist, $song, $rating);

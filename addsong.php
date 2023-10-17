@@ -53,7 +53,10 @@
         echo "you cant rate the same song twice";
     } else if (empty($song) || empty($artist) || empty($rating)){
         echo "please fill out all fields";
-    } else {
+    } else if (!is_int($rating)){
+        echo "Please enter a number in for the ratings";
+    }
+    else {
         $sql = "INSERT INTO ratings (username, artist, song, rating) VALUES (?,?,?,?)";
         $stmt1 = mysqli_prepare($conn, $sql);   
         mysqli_stmt_bind_param($stmt1, "sssi", $_SESSION['name'],$artist, $song, $rating);
@@ -73,7 +76,7 @@
   Rating: <input type="text" name="Rating" placeholder="" /><br>
   <input type="submit" name="submit" value="submit"/>
 
-
   </form>
+  <br /><a href="index.php">Cancel</a>
 </body>
 </html>
