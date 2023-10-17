@@ -25,11 +25,12 @@
 <body>
   <?php session_start();
 
-
-    if (!isset($_SESSION['username'])) {
-        exit;
+    // insert _GET statement for the global username here
+    // may need to sub $u for the global variable 
+    if($_SESSION["loggedin"]){
+      $u = $_SESSION['name'];
+      echo 'logged in as: ' + $u;
     }
-    echo "Logged in as: " . $user;
     // PHP code for retrieving data from the database. If you have multiple files
     // relying on the this server config, you can create a config.php file and
     // import it with `require_once "config.php";` at the beginning of each file 
@@ -47,6 +48,7 @@
     // databases (https://en.wikipedia.org/wiki/MySQLi).
     // Instances of classes are created using `new`.
     $conn = new mysqli($servername, $username, $password, $dbname);
+    $db = mysqli_connect($servername, $username, $password, $dbname);
 
     // Check server connection.
     if ($conn->connect_error) {
@@ -56,20 +58,20 @@
       die("Connection failed: " . $conn->connect_error);
     }
 
-    if (isset($_REQUEST['confirm'])) {
+    if (isset($_REQUEST['submit'])) {
       // Get the submitted ratings to delete
       $song = $_REQUEST["song"];
   
       if(!isset($song)) {
-          echo "No song was selected.";
+          echo "Please put in a proper selection.";
       }else {
           // Prepare a SQL query to delete the selected ratings
           $sql = "DELETE FROM ratings WHERE song = ? AND username = ?";
           $stmt = mysqli_prepare($conn, $sql);
-          mysqli_stmt_bind_param($stmt, "ss", $song, $user);
-  
+          mysqli_stmt_bind_param($stmt, "ss", $song, $u);
           if(mysqli_stmt_execute($stmt)){
             echo "your entry has been deleted.";
+            header("Location: index.php");
           } else {
             echo "something went wrong";
           }
@@ -92,27 +94,13 @@
     
   <!-- 
     HTML code for the form by which the user can query data.
-    Note that we are using names (to pass values around in PHP) and not ids
-    (which are for CSS styling or JavaScript functionality).
-    You can leave the action in the form open 
-    (https://stackoverflow.com/questions/1131781/is-it-a-good-practice-to-use-an-empty-url-for-a-html-forms-action-attribute-a)
   -->
   <form method="GET" action="">
   Song: <input type="text" name="song" placeholder="song" /><br>
-  <input type="submit" name="confirm" value="Submit"/>
+  <input type="submit" name="submit" value="Submit"/>
 
   
-  <!-- 
-    Make sure that there is a value available for $out_value.
-    If so, print to the screen.
-  -->
-  <p><?php 
-    if(!empty($out_value)){
-      echo $out_value;
-    }
-        
 
-  ?></p>
   </form>
 </body>
 </html>
