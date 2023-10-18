@@ -31,6 +31,7 @@
       $u = $_SESSION['name'];
       echo 'logged in as: ' + $u;
     }
+    echo '<br /><a href="login.php">Log out</a>';
     // PHP code for retrieving data from the database. If you have multiple files
     // relying on the this server config, you can create a config.php file and
     // import it with `require_once "config.php";` at the beginning of each file 

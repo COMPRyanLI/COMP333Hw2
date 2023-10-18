@@ -9,12 +9,13 @@
 
 <body>
 <?php 
-
+  session_start();
   // insert _GET statement for the global username here 
   if($_SESSION["loggedin"]){
-    echo 'logged in as: ';
+    $u = $_SESSION['name'];
+    echo 'logged in as: ' + $u;
   }
-
+  echo '<br /><a href="login.php">Log out</a>';
   // database information
   $servername = "localhost";
   $username = "root";
