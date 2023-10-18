@@ -33,15 +33,13 @@
     
     $user = $_REQUEST['userid'];
     $pass = $_REQUEST['password'];
-    //$pass= password_hash($pass, PASSWORD_DEFAULT);
-    // password_verify($pass, $hashed_password)
 
     // The following is the core part of this script where we connect PHP
     // and SQL.
     // Check that the user entered data in the form.
     if(!empty($user) && !empty($pass)){
       // If so, prepare SQL query with the data to query the database.
-      $sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+      $sql = "SELECT * FROM users WHERE username = ?";
       // Construct a prepared statement.
       $stmt = mysqli_prepare($db, $sql);
 
@@ -49,14 +47,16 @@
       // statement AS STRINGS (that is what "ss" means). In other words, the
       // user input is strictly interpreted by the server as data and not as
       // porgram code part of the SQL statement.
-        mysqli_stmt_bind_param($stmt, "ss", $user, $pass);
+        mysqli_stmt_bind_param($stmt, "s", $user);
       // Run the prepared statement.
         mysqli_stmt_execute($stmt);
        $result = mysqli_stmt_get_result($stmt);
        $num = mysqli_num_rows($result);
+       $row = mysqli_fetch_assoc($result);
+       $hashed_password = $row["password"];
        
-      
-       if ($num > 0) {
+
+       if ($num > 0 && password_verify($pass, $hashed_password)) {
           echo "Login Success";
           session_start();
           echo 'Welcome to page #1<br />';
@@ -65,7 +65,7 @@
 // Set session variables.
 // The "loggedin" session variable is used here to keep track if a user
 // is logged in.
-          $_SESSION['animal']   = 'cat';
+          $_SESSION['name']   = $user;
           $_SESSION["loggedin"] = true;
 
 // Call page 2
@@ -101,7 +101,7 @@
         <input type="submit" id="button" name = "login" value="Login" />
       </p>
       
-      
+      <p> <a href = "signup.php" >Sign up</a></p>
     </form>
   </div>
 

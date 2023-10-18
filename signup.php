@@ -22,6 +22,9 @@
 
 <body>
   <?php 
+    if($_SESSION["loggedin"]){
+      header("Location: index.php");
+    }
     // PHP code for retrieving data from the database. If you have multiple files
     // relying on the this server config, you can create a config.php file and
     // import it with `require_once "config.php";` at the beginning of each file 
@@ -76,7 +79,10 @@
         echo "Username is taken. Try another";  
       } else if ($pass2 != $pass){
         echo "Passwords dont match";
-      }else {
+      }else if (strlen($pass) < 10){
+        echo "Passwords is not long enough";
+      } 
+      else {
         $hash = password_hash($pass,  PASSWORD_DEFAULT); 
         $out_value = "Success!";
   
