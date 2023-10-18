@@ -31,6 +31,7 @@
       $u = $_SESSION['name'];
       echo 'logged in as: ' . $u;
     }
+    echo '<br /><a href="login.php">Log out</a>';
     if(isset($_GET["id"])){
       $id = $_GET["id"];
     }
@@ -105,6 +106,7 @@
   
 
   </form>
+  <br /><a href="index.php">Cancel</a>
   <?php
   echo '<br /><a href="index.php">Back</a>';
   ?>

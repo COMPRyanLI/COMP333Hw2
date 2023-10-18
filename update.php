@@ -15,6 +15,7 @@
     $u = $_SESSION['name'];
     echo 'logged in as: ';
   }
+  echo '<br /><a href="login.php">Log out</a>';
   if(isset($_GET["id"])){
     $id = $_GET["id"];
   }
