@@ -1,6 +1,13 @@
 <!-- 
   COMP 333: Software Engineering
-  Lance Gartrell
+  Sebastian Zimmeck (szimmeck@wesleyan.edu) 
+
+  PHP sample script for querying a database with SQL. This script can be run 
+  from inside the htdocs directory in XAMPP. 
+  
+  NOTE: The script assumes that there is a database set up (e.g., via phpMyAdmin) 
+  named COMP333_SQL_Tutorial with students and student_grades tables per the 
+  sql_tutorial.md.
 -->
 
 <!DOCTYPE HTML>
@@ -21,7 +28,7 @@
 </head>
 
 <body>
-  <?php 
+  <?php session_start();
     // PHP code for retrieving data from the database. If you have multiple files
     // relying on the this server config, you can create a config.php file and
     // import it with `require_once "config.php";` at the beginning of each file 
@@ -53,7 +60,6 @@
       $out_value = "";
       $name = $_REQUEST['username'];
       $pass = $_REQUEST['password'];
-      $pass2 = $_REQUEST['pass2'];
 
       // The following is the core part of this script where we connect PHP
       // and SQL.
@@ -74,12 +80,12 @@
       // insert data into SQL databse unless username is taken 
       if($num>0){ 
         echo "Username is taken. Try another";  
-      } else if ($pass2 != $pass){
-        echo "Passwords dont match";
       }else {
+        
         $hash = password_hash($pass,  PASSWORD_DEFAULT); 
         $out_value = "Success!";
-  
+        
+      
         // sql query for the username and password
         $p_query = "INSERT INTO users (username, password) VALUES (?, ?)";
         echo "<br /><a href="."index.html" . ">Home</a>";
@@ -88,9 +94,11 @@
         $stmt = mysqli_prepare($conn, $p_query);
         mysqli_stmt_bind_param($stmt, "ss", $name, $hash);
 
-        if(mysqli_stmt_execute($stmt)){
-          session_start();
-          header("Location: login.php");
+        if(mysqli_stmt_execute($stmt)){     
+          // code for starting a user log in session. The user will stay logged in 
+          // as long as the global username variable in session is equal to their own. 
+          $_SESSION['username'] = $name;
+          header("Location: signup.php");
         };
         
       }
@@ -123,7 +131,6 @@
   <form method="GET" action="signup.php">
   Username: <input type="text" name="username" placeholder="username" /><br>
   Password: <input type="password" name="password" placeholder="password" /><br>
-  Re-Enter Password: <input type="password" name="pass2" placeholder="password" /><br>
   <input type="submit" name="submit" value="Submit"/>
 
   
