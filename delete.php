@@ -16,7 +16,7 @@
     <meta http-equiv="X-UA-Compatible"
           content="IE=edge">
     <meta name="viewport" content="application_x-www-form-urlencoded">
-    <meta name ="description" content = "The signup page">
+    <meta name ="description" content = "The delete page">
     <meta name="description" content="">
     <title>Welcome to the Best Music community</title>
     <link rel="stylesheet" href="">
@@ -29,9 +29,11 @@
     // may need to sub $u for the global variable 
     if($_SESSION["loggedin"]){
       $u = $_SESSION['name'];
-      echo 'logged in as: ' + $u;
+      echo 'logged in as: ' . $u;
     }
-    echo '<br /><a href="login.php">Log out</a>';
+    if(isset($_GET["id"])){
+      $id = $_GET["id"];
+    }
     // PHP code for retrieving data from the database. If you have multiple files
     // relying on the this server config, you can create a config.php file and
     // import it with `require_once "config.php";` at the beginning of each file 
@@ -58,6 +60,13 @@
       // . is used to concatenate strings.
       die("Connection failed: " . $conn->connect_error);
     }
+    $sql_query = "SELECT song, artist, rating FROM ratings WHERE id = ?";
+    $stmt = mysqli_prepare($conn, $sql_query);   
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $row = mysqli_fetch_assoc($result);
+    $s = $row['song'];
 
     if (isset($_REQUEST['submit'])) {
       // Get the submitted ratings to delete
@@ -80,14 +89,7 @@
     }
   
   ?>
-<nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="index.html">Features</a></li>
-            <li><a href="index.html">Pricing</a></li>
-            <li><a href="index.html">FAQs</a></li>
-        </ul>
-  </nav>
+
 
   <h1>Delete Rating</h1>
     <hr color="#a01d88"/>
@@ -97,10 +99,14 @@
     HTML code for the form by which the user can query data.
   -->
   <form method="GET" action="">
-  Song: <input type="text" name="song" placeholder="song" /><br>
+  Song: <input type="text" name="song" placeholder="<?php echo $s ?>" /><br>
   <input type="submit" name="submit" value="Submit"/>
-  </form>
+
   
-  <br /><a href="index.php">Cancel</a>
+
+  </form>
+  <?php
+  echo '<br /><a href="index.php">Back</a>';
+  ?>
 </body>
 </html>

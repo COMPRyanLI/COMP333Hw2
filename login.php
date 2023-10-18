@@ -15,10 +15,18 @@
   
   
 <?php
+   session_start();
+  // end the current session and unset all session variables
+  if (isset($_SESSION["loggedin"])) {
+    // If the user is already logged in, redirect to index.php
+    $_SESSION = array();
+    session_destroy();
+  }
+  
   $servername = "localhost";
   $username = "root";
   $password = "";
-  $dbname = "Music_db";
+  $dbname = "music_db";
 
   $db = mysqli_connect($servername, $username, $password, $dbname);
 
@@ -33,6 +41,8 @@
     
     $user = $_REQUEST['userid'];
     $pass = $_REQUEST['password'];
+    //$pass= password_hash($pass, PASSWORD_DEFAULT);
+    // password_verify($pass, $hashed_password)
 
     // The following is the core part of this script where we connect PHP
     // and SQL.
@@ -52,6 +62,8 @@
         mysqli_stmt_execute($stmt);
        $result = mysqli_stmt_get_result($stmt);
        $num = mysqli_num_rows($result);
+       
+      
        $row = mysqli_fetch_assoc($result);
        $hashed_password = $row["password"];
        
@@ -62,21 +74,27 @@
           echo 'Welcome to page #1<br />';
           echo('PHPSESSID: ' . session_id($_GET['session_id']));
 
+
 // Set session variables.
 // The "loggedin" session variable is used here to keep track if a user
 // is logged in.
           $_SESSION['name']   = $user;
           $_SESSION["loggedin"] = true;
 
-// Call page 2
+// Call index page
          if($_SESSION["loggedin"]){
-             echo '<br /><a href="index.php">page 2</a>';
+            header("Location: index.php");
             }
 
            } else {
             echo "Wrong User id or password";
           }
+          
          }
+        else{
+          echo "You have blank fields.";
+        } 
+         
         }
   // Close SQL connection.
 
@@ -101,10 +119,10 @@
         <input type="submit" id="button" name = "login" value="Login" />
       </p>
       
-      <p> <a href = "signup.php" >Sign up</a></p>
+      
     </form>
   </div>
-
+  <p>Don't have an account? <a href = "Registration.php">Sign up now?</a> </p>
 
   
 </body>

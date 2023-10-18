@@ -9,12 +9,13 @@
 
 <body>
 <?php 
-
+  session_start();
   // insert _GET statement for the global username here 
   if($_SESSION["loggedin"]){
-    echo 'logged in as: ';
+    $u = $_SESSION['name'];
+    echo 'logged in as: ' . $u;
   }
-
+  echo '<br /><a href="login.php">Log out</a>';
   // database information
   $servername = "localhost";
   $username = "root";
@@ -48,13 +49,18 @@
     $result = mysqli_stmt_get_result($stmt);
     $row = mysqli_fetch_assoc($result);
 
+
     // inserts the user rating into the ratings db 
     if ($row > 0){
         echo "you cant rate the same song twice";
     } else if (empty($song) || empty($artist) || empty($rating)){
-        echo "Please fill out all fields";
-    } else if (!is_int($rating || $rating > 5)){
-        echo "Please enter a valid input ratings";
+        echo "please fill out all fields";
+    } else if (!is_numeric($rating)){
+        echo "Please enter a number in for the ratings";
+    }
+    else if(strlen($rating)!=1){
+      echo "rating digit should be 1";
+
     }
     else {
         $sql = "INSERT INTO ratings (username, artist, song, rating) VALUES (?,?,?,?)";

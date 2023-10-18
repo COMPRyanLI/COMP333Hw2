@@ -65,8 +65,8 @@
         echo "<td>";
             echo '<a href="view.php?id='. $row["id"] .'">View</a>';
             if ($_SESSION['name'] == $row["username"]) {
-                echo '<a href="update.php">Update</a>';
-                echo '<a href="delete.php">Delete</a>';
+                echo '<a href="update.php?id='. $row["id"] .'">Update</a>';
+                echo '<a href="delete.php?id='. $row["id"] .'">Delete</a>';
             }
         echo "</td>";
 

@@ -35,6 +35,15 @@
     // . is used to concatenate strings.
     die("Connection failed: " . $conn->connect_error);
   }
+    $sql_query = "SELECT song, artist, rating FROM ratings WHERE id = ?";
+    $stmt = mysqli_prepare($conn, $sql_query);   
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $row = mysqli_fetch_assoc($result);
+    $s = $row['song'];
+    $a = $row['artist'];
+    $r = $row['rating'];
   
   // checks if form was submited
   if(isset($_REQUEST['submit'])){
@@ -43,27 +52,24 @@
     $rating = $_REQUEST['Rating'];
 
     // add in feature to populate the update  
-    $sql_query = "SELECT song, artist, rating FROM ratings WHERE id = ?";
-    $stmt = mysqli_prepare($conn, $sql);   
-    mysqli_stmt_bind_param($stmt, "i", $id);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    $row = mysqli_fetch_assoc($result);
-    $s = $row['song'];
-    $a = $row['artist'];
-    $r = $row['rating'];
+    
     // checks if user entered proper data. if so, insert that data into the db
-    if (isset($song) | isset($artist) | isset($rating)){
+    if (!isset($song) || !isset($artist) || !isset($rating)){
         echo "Please fill out all fields";
-    } else if (!is_int($rating) || $rating > 5){
-        echo "Please enter a valid input for rating (1-5)";
-    }
+    } else if (!is_numeric($rating)){
+      echo "Please enter a number in for the ratings";
+  }
+  else if(strlen($rating)!=1){
+    echo "rating digit should be 1";
+
+  }
     else {
-        $sql = "UPDATE ratings SET artist = ?, song = ?, rating = ?" ;
+        $sql = "UPDATE ratings SET artist = ?, song = ?, rating = ? WHERE id = ?" ;
         $stmt1 = mysqli_prepare($conn, $sql);   
-        mysqli_stmt_bind_param($stmt1, "ssi", $artist, $song, $rating);
+        mysqli_stmt_bind_param($stmt1, "ssii", $artist, $song, $rating,$id);
         mysqli_stmt_execute($stmt1);
         header("Location: index.php");
+        
     }
   }
 
